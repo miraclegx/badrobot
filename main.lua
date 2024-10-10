@@ -1,7 +1,8 @@
 -- started october 10th
-  Player = require('objs/player')
+  --Player = require('objs/player')
+  Game = require('scenes/game')
   
-  currentScene = player
+  currentScene = game
 	function love.load()
     currentScene.load()
 	end
