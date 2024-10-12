@@ -14,6 +14,9 @@ function game.load()
     bulletImg = love.graphics.newImage('assets/pixelorama/bullet.png'),
     bullets = {}
   }
+  
+  enemies = {}
+  enemiesImg = love.graphics.newImage('assets/pixelorama/badRobotEnemies.png')
 end
 
 function game.update()
@@ -36,11 +39,22 @@ function game.update()
     v.x = v.x + math.cos(v.angle) * (v.speed) * dt
     v.y = v.y + math.sin(v.angle) * (v.speed) * dt
   end
+  -- simple logic to make the enemies move towards the player
+  for i,v in pairs(enemies) do
+    v.angle = math.atan2(player.y-v.y,player.x-v.x)
+    v.x = v.x + math.cos(v.angle) * v.speed * dt
+    v.y = v.y + math.sin(v.angle) * v.speed * dt
+  end
 end
 
 function game.draw()
   love.graphics.setBackgroundColor(.6,.7,.6)
   --love.graphics.print(dt)
+  --draw the enemies
+  for i,v in pairs(enemies) do
+    love.graphics.draw(enemiesImg,v.x,v.y)
+  end
+  --draw the player
   love.graphics.draw(player.img,player.x,player.y)
   --draw the bullets
   for i,v in pairs(player.bullets) do
@@ -52,6 +66,8 @@ end
 function game.keypressed(key)
   if key == 'space' then
     playerShoot()
+  elseif key == 's' then
+    spawnEnemy()
   end
 end
 -- functions below
@@ -60,10 +76,9 @@ function playerShoot()
   bullet.angle = math.atan2(mouse_y-bullet.y,mouse_x-bullet.x)
   table.insert(player.bullets,bullet)
 end
-function  drawFromTable(table)
-  for i,v in pairs(table) do
-    love.graphics.draw()
-  end
+function spawnEnemy()
+  enemy = {x = 0,y = 0,img = enemy_img,speed = 10,angle = 0}
+  table.insert(enemies,enemy)
 end
 
 return game
