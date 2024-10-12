@@ -16,8 +16,6 @@
 	end
 
 	function love.keypressed(key)
-		if key =='' then
-
-		end
+    currentScene.keypressed(key)
 	end	
 
