@@ -1,8 +1,9 @@
 game = {}
-
+sti = require('sti')
 dt = love.timer.getDelta()
 
 function game.load()
+  map = sti('assets/pixelorama/map.lua')
   love.mouse.setVisible(false)
   player = {x = 100,
     y = 100,
@@ -48,7 +49,8 @@ function game.update()
 end
 
 function game.draw()
-  love.graphics.setBackgroundColor(.6,.7,.6)
+  map:draw()
+  --love.graphics.setBackgroundColor(.6,.7,.6)
   --love.graphics.print(dt)
   --draw the enemies
   for i,v in pairs(enemies) do
@@ -77,7 +79,7 @@ function playerShoot()
   table.insert(player.bullets,bullet)
 end
 function spawnEnemy()
-  enemy = {x = 0,y = 0,img = enemy_img,speed = 10,angle = 0}
+  enemy = {x = 0,y = 0,img = enemy_img,speed = 50,angle = 0}
   table.insert(enemies,enemy)
 end
 
