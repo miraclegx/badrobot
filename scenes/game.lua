@@ -25,21 +25,24 @@ function game.update()
   player.reticule.x,player.reticule.y = love.mouse.getPosition()
   mouse_x,mouse_y = love.mouse.getPosition()
   -- movement
-  if love.keyboard.isDown('left') then
+  if love.keyboard.isDown('a') then
     player.x = player.x - player.speed * dt
-  elseif love.keyboard.isDown('right') then
+  elseif love.keyboard.isDown('d') then
     player.x = player.x + player.speed * dt
   end
-  if love.keyboard.isDown('up') then
+  if love.keyboard.isDown('w') then
     player.y = player.y - player.speed * dt
-  elseif love.keyboard.isDown('down') then
+  elseif love.keyboard.isDown('s') then
     player.y = player.y + player.speed * dt
   end
   -- moves the players bullet
   for i,v in pairs(player.bullets) do
-    v.x = v.x + math.cos(v.angle) * (v.speed) * dt
-    v.y = v.y + math.sin(v.angle) * (v.speed) * dt
+    if v.direction == false then
+      v.x = v.x + math.cos(v.angle) * (v.speed) * dt
+      v.y = v.y + math.sin(v.angle) * (v.speed) * dt
+    end
   end
+  moveBulletDirectionWise(player.bullets)
   -- simple logic to make the enemies move towards the player
   for i,v in pairs(enemies) do
     v.angle = math.atan2(player.y-v.y,player.x-v.x)
@@ -68,8 +71,10 @@ end
 function game.keypressed(key)
   if key == 'space' then
     playerShoot()
-  elseif key == 's' then
+  elseif key == 'x' then
     spawnEnemy()
+  elseif key == 'up' then
+    shootBulletDirectionWise(up,player.bullets)
   end
 end
 -- functions below
@@ -77,6 +82,25 @@ function playerShoot()
   bullet = {x = player.x,y = player.y,speed = player.speed*4}
   bullet.angle = math.atan2(mouse_y-bullet.y,mouse_x-bullet.x)
   table.insert(player.bullets,bullet)
+end
+function shootBulletDirectionWise(direction)
+  -- valid args are up down left right
+  bullet = {x = player.x,y = player.y,speed = player.speed*4,direction = direction}
+  table.insert(player.bullets,bullet)
+end
+function moveBulletDirectionWise(table)
+  -- will be nice if i can make the fuction work without a table
+ for i,v in pairs(table) do
+    if v.direction == 'up' then
+      v.y = v.y * v.speed *dt
+    elseif v.direction == 'down' then
+      v.y = v.y * v.speed * dt
+    elseif v.direction == 'left' then
+      v.x = v.x *(-v.speed) *dt
+    elseif v.direction == 'right' then
+      v.x = v.x * v.speed *dt
+    end
+end
 end
 function spawnEnemy()
   enemy = {x = 0,y = 0,img = enemy_img,speed = 50,angle = 0}
